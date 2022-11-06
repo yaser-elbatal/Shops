@@ -1,0 +1,5 @@
+export * from './Intro-slider'
+export * from './login'
+export * from './lang'
+export * from './register'
+export * from './code-activattion'

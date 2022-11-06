@@ -1,0 +1,601 @@
+diff --git a/node_modules/react-native-image-gallery/src/Gallery.js b/node_modules/react-native-image-gallery/src/Gallery.js
+index 4955fc5..21849ad 100644
+--- a/node_modules/react-native-image-gallery/src/Gallery.js
++++ b/node_modules/react-native-image-gallery/src/Gallery.js
+@@ -1,9 +1,10 @@
+ import React, { PureComponent } from 'react';
+-import { View, ViewPropTypes } from 'react-native';
++import { View, } from 'react-native';
+ import PropTypes from 'prop-types';
+ import { createResponder } from './libraries/GestureResponder';
+ import TransformableImage from './libraries/TransformableImage';
+ import ViewPager from './libraries/ViewPager';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const DEFAULT_FLAT_LIST_PROPS = {
+     windowSize: 3
+@@ -42,7 +43,7 @@ export default class Gallery extends PureComponent {
+     pageCount = 0;
+     gestureResponder = undefined;
+ 
+-    constructor (props) {
++    constructor(props) {
+         super(props);
+ 
+         this.renderPage = this.renderPage.bind(this);
+@@ -55,7 +56,7 @@ export default class Gallery extends PureComponent {
+         this.activeImageResponder = this.activeImageResponder.bind(this);
+     }
+ 
+-    UNSAFE_componentWillMount () {
++    UNSAFE_componentWillMount() {
+         let onResponderReleaseOrTerminate = (evt, gestureState) => {
+             if (this.activeResponder) {
+                 if (this.activeResponder === this.viewPagerResponder &&
+@@ -146,15 +147,15 @@ export default class Gallery extends PureComponent {
+         };
+     }
+ 
+-    componentDidMount () {
++    componentDidMount() {
+         this._isMounted = true;
+     }
+ 
+-    componentWillUnmount () {
++    componentWillUnmount() {
+         this._isMounted = false;
+     }
+ 
+-    shouldScrollViewPager (evt, gestureState) {
++    shouldScrollViewPager(evt, gestureState) {
+         if (gestureState.numberActiveTouches > 1) {
+             return false;
+         }
+@@ -175,7 +176,7 @@ export default class Gallery extends PureComponent {
+         return false;
+     }
+ 
+-    activeImageResponder (evt, gestureState) {
++    activeImageResponder(evt, gestureState) {
+         if (this.activeResponder !== this.imageResponder) {
+             if (this.activeResponder === this.viewPagerResponder) {
+                 this.viewPagerResponder.onEnd(evt, gestureState, true); // pass true to disable ViewPager settle
+@@ -185,7 +186,7 @@ export default class Gallery extends PureComponent {
+         }
+     }
+ 
+-    activeViewPagerResponder (evt, gestureState) {
++    activeViewPagerResponder(evt, gestureState) {
+         if (this.activeResponder !== this.viewPagerResponder) {
+             if (this.activeResponder === this.imageResponder) {
+                 this.imageResponder.onEnd(evt, gestureState);
+@@ -195,7 +196,7 @@ export default class Gallery extends PureComponent {
+         }
+     }
+ 
+-    getImageTransformer (page) {
++    getImageTransformer(page) {
+         if (page >= 0 && page < this.pageCount) {
+             let ref = this.imageRefs.get(page);
+             if (ref) {
+@@ -204,59 +205,59 @@ export default class Gallery extends PureComponent {
+         }
+     }
+ 
+-    getCurrentImageTransformer () {
++    getCurrentImageTransformer() {
+         return this.getImageTransformer(this.currentPage);
+     }
+ 
+-    getViewPagerInstance () {
++    getViewPagerInstance() {
+         return this.refs['galleryViewPager'];
+     }
+ 
+-    onPageSelected (page) {
++    onPageSelected(page) {
+         this.currentPage = page;
+         this.props.onPageSelected && this.props.onPageSelected(page);
+     }
+ 
+-    onPageScrollStateChanged (state) {
++    onPageScrollStateChanged(state) {
+         if (state === 'idle') {
+             this.resetHistoryImageTransform();
+         }
+         this.props.onPageScrollStateChanged && this.props.onPageScrollStateChanged(state);
+     }
+ 
+-    renderPage (pageData, pageId) {
++    renderPage(pageData, pageId) {
+         const { onViewTransformed, onTransformGestureReleased, errorComponent, imageComponent } = this.props;
+         return (
+             <TransformableImage
+-              onViewTransformed={((transform) => {
+-                  onViewTransformed && onViewTransformed(transform, pageId);
+-              })}
+-              onTransformGestureReleased={((transform) => {
+-                  // need the 'return' here because the return value is checked in ViewTransformer
+-                  return onTransformGestureReleased && onTransformGestureReleased(transform, pageId);
+-              })}
+-              ref={((ref) => { this.imageRefs.set(pageId, ref); })}
+-              key={'innerImage#' + pageId}
+-              errorComponent={errorComponent}
+-              imageComponent={imageComponent}
+-              image={pageData}
++                onViewTransformed={((transform) => {
++                    onViewTransformed && onViewTransformed(transform, pageId);
++                })}
++                onTransformGestureReleased={((transform) => {
++                    // need the 'return' here because the return value is checked in ViewTransformer
++                    return onTransformGestureReleased && onTransformGestureReleased(transform, pageId);
++                })}
++                ref={((ref) => { this.imageRefs.set(pageId, ref); })}
++                key={'innerImage#' + pageId}
++                errorComponent={errorComponent}
++                imageComponent={imageComponent}
++                image={pageData}
+             />
+         );
+     }
+ 
+-    resetHistoryImageTransform () {
++    resetHistoryImageTransform() {
+         let transformer = this.getImageTransformer(this.currentPage + 1);
+         if (transformer) {
+-            transformer.forceUpdateTransform({scale: 1, translateX: 0, translateY: 0});
++            transformer.forceUpdateTransform({ scale: 1, translateX: 0, translateY: 0 });
+         }
+ 
+         transformer = this.getImageTransformer(this.currentPage - 1);
+         if (transformer) {
+-            transformer.forceUpdateTransform({scale: 1, translateX: 0, translateY: 0});
++            transformer.forceUpdateTransform({ scale: 1, translateX: 0, translateY: 0 });
+         }
+     }
+ 
+-    render () {
++    render() {
+         let gestureResponder = this.gestureResponder;
+ 
+         let images = this.props.images;
+@@ -269,22 +270,22 @@ export default class Gallery extends PureComponent {
+             gestureResponder = {};
+         }
+ 
+-        const flatListProps = {...DEFAULT_FLAT_LIST_PROPS, ...this.props.flatListProps};
++        const flatListProps = { ...DEFAULT_FLAT_LIST_PROPS, ...this.props.flatListProps };
+ 
+         return (
+             <ViewPager
+-              {...this.props}
+-              flatListProps={flatListProps}
+-              ref={'galleryViewPager'}
+-              scrollViewStyle={this.props.scrollViewStyle}
+-              scrollEnabled={false}
+-              renderPage={this.renderPage}
+-              pageDataArray={images}
+-              {...gestureResponder}
+-              onPageSelected={this.onPageSelected}
+-              onPageScrollStateChanged={this.onPageScrollStateChanged}
+-              onPageScroll={this.props.onPageScroll}
+-              removeClippedSubviews={this.props.removeClippedSubviews}
++                {...this.props}
++                flatListProps={flatListProps}
++                ref={'galleryViewPager'}
++                scrollViewStyle={this.props.scrollViewStyle}
++                scrollEnabled={false}
++                renderPage={this.renderPage}
++                pageDataArray={images}
++                {...gestureResponder}
++                onPageSelected={this.onPageSelected}
++                onPageScrollStateChanged={this.onPageScrollStateChanged}
++                onPageScroll={this.props.onPageScroll}
++                removeClippedSubviews={this.props.removeClippedSubviews}
+             />
+         );
+     }
+diff --git a/node_modules/react-native-image-gallery/src/libraries/TransformableImage/index.js b/node_modules/react-native-image-gallery/src/libraries/TransformableImage/index.js
+index a691492..f8f47b8 100644
+--- a/node_modules/react-native-image-gallery/src/libraries/TransformableImage/index.js
++++ b/node_modules/react-native-image-gallery/src/libraries/TransformableImage/index.js
+@@ -1,7 +1,8 @@
+ import React, { PureComponent } from 'react';
+-import { View, Text, Image, ViewPropTypes } from 'react-native';
++import { View, Text, Image, } from 'react-native';
+ import PropTypes from 'prop-types';
+ import ViewTransformer from '../ViewTransformer';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ export default class TransformableImage extends PureComponent {
+     static propTypes = {
+@@ -33,7 +34,7 @@ export default class TransformableImage extends PureComponent {
+         resizeMode: 'contain'
+     };
+ 
+-    constructor (props) {
++    constructor(props) {
+         super(props);
+ 
+         this.onLayout = this.onLayout.bind(this);
+@@ -51,17 +52,17 @@ export default class TransformableImage extends PureComponent {
+         };
+     }
+ 
+-    UNSAFE_componentWillMount () {
++    UNSAFE_componentWillMount() {
+         if (!this.state.imageDimensions) {
+             this.getImageSize(this.props.image);
+         }
+     }
+ 
+-    componentDidMount () {
++    componentDidMount() {
+         this._mounted = true;
+     }
+ 
+-    UNSAFE_componentWillReceiveProps (nextProps) {
++    UNSAFE_componentWillReceiveProps(nextProps) {
+         if (!sameImage(this.props.image, nextProps.image)) {
+             // image source changed, clear last image's imageDimensions info if any
+             this.setState({ imageDimensions: nextProps.image.dimensions, keyAcumulator: this.state.keyAcumulator + 1 });
+@@ -71,32 +72,32 @@ export default class TransformableImage extends PureComponent {
+         }
+     }
+ 
+-    componentWillUnmount () {
++    componentWillUnmount() {
+         this._mounted = false;
+     }
+ 
+-    onLoadStart (e) {
++    onLoadStart(e) {
+         this.props.onLoadStart && this.props.onLoadStart(e);
+         if (this.state.imageLoaded) {
+             this.setState({ imageLoaded: false });
+         }
+     }
+ 
+-    onLoad (e) {
++    onLoad(e) {
+         this.props.onLoad && this.props.onLoad(e);
+         if (!this.state.imageLoaded) {
+             this.setState({ imageLoaded: true });
+         }
+     }
+ 
+-    onLayout (e) {
+-        let {width, height} = e.nativeEvent.layout;
++    onLayout(e) {
++        let { width, height } = e.nativeEvent.layout;
+         if (this.state.viewWidth !== width || this.state.viewHeight !== height) {
+             this.setState({ viewWidth: width, viewHeight: height });
+         }
+     }
+ 
+-    getImageSize (image) {
++    getImageSize(image) {
+         if (!image) {
+             return;
+         }
+@@ -128,19 +129,19 @@ export default class TransformableImage extends PureComponent {
+         }
+     }
+ 
+-    getViewTransformerInstance () {
++    getViewTransformerInstance() {
+         return this.refs['viewTransformer'];
+     }
+ 
+-    renderError () {
++    renderError() {
+         return (this.props.errorComponent && this.props.errorComponent()) || (
+             <View style={{ flex: 1, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center' }}>
+-                 <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>This image cannot be displayed...</Text>
++                <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>This image cannot be displayed...</Text>
+             </View>
+         );
+     }
+ 
+-    render () {
++    render() {
+         const { imageDimensions, viewWidth, viewHeight, error, keyAccumulator, imageLoaded } = this.state;
+         const { style, image, imageComponent, resizeMode, enableTransform, enableScale, enableTranslate, onTransformGestureReleased, onViewTransformed } = this.props;
+ 
+@@ -172,29 +173,29 @@ export default class TransformableImage extends PureComponent {
+             capInsets: { left: 0.1, top: 0.1, right: 0.1, bottom: 0.1 }
+         };
+ 
+-        const content = imageComponent ? imageComponent(imageProps, imageDimensions) : <Image { ...imageProps } />;
++        const content = imageComponent ? imageComponent(imageProps, imageDimensions) : <Image {...imageProps} />;
+ 
+         return (
+             <ViewTransformer
+-              ref={'viewTransformer'}
+-              key={'viewTransformer#' + keyAccumulator} // when image source changes, we should use a different node to avoid reusing previous transform state
+-              enableTransform={enableTransform && imageLoaded} // disable transform until image is loaded
+-              enableScale={enableScale}
+-              enableTranslate={enableTranslate}
+-              enableResistance={true}
+-              onTransformGestureReleased={onTransformGestureReleased}
+-              onViewTransformed={onViewTransformed}
+-              maxScale={maxScale}
+-              contentAspectRatio={contentAspectRatio}
+-              onLayout={this.onLayout}
+-              style={style}>
+-                { error ? this.renderError() : content }
++                ref={'viewTransformer'}
++                key={'viewTransformer#' + keyAccumulator} // when image source changes, we should use a different node to avoid reusing previous transform state
++                enableTransform={enableTransform && imageLoaded} // disable transform until image is loaded
++                enableScale={enableScale}
++                enableTranslate={enableTranslate}
++                enableResistance={true}
++                onTransformGestureReleased={onTransformGestureReleased}
++                onViewTransformed={onViewTransformed}
++                maxScale={maxScale}
++                contentAspectRatio={contentAspectRatio}
++                onLayout={this.onLayout}
++                style={style}>
++                {error ? this.renderError() : content}
+             </ViewTransformer>
+         );
+     }
+ }
+ 
+-function sameImage (source, nextSource) {
++function sameImage(source, nextSource) {
+     if (source === nextSource) {
+         return true;
+     }
+diff --git a/node_modules/react-native-image-gallery/src/libraries/ViewPager/index.js b/node_modules/react-native-image-gallery/src/libraries/ViewPager/index.js
+index d5fc464..2407fb9 100644
+--- a/node_modules/react-native-image-gallery/src/libraries/ViewPager/index.js
++++ b/node_modules/react-native-image-gallery/src/libraries/ViewPager/index.js
+@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react';
+ import {
+     View,
+     FlatList,
+-    ViewPropTypes,
+     InteractionManager,
+     Dimensions
+ } from 'react-native';
+ import PropTypes from 'prop-types';
+ import Scroller from '../Scroller';
+ import { createResponder } from '../GestureResponder';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const MIN_FLING_VELOCITY = 0.5;
+ 
+@@ -50,7 +50,7 @@ export default class ViewPager extends PureComponent {
+ 
+     state = { width, height };
+ 
+-    constructor (props) {
++    constructor(props) {
+         super(props);
+ 
+         this.onLayout = this.onLayout.bind(this);
+@@ -63,7 +63,7 @@ export default class ViewPager extends PureComponent {
+         this.scroller = this.createScroller();
+     }
+ 
+-    createScroller () {
++    createScroller() {
+         return new Scroller(true, (dx, dy, scroller) => {
+             if (dx === 0 && dy === 0 && scroller.isFinished()) {
+                 if (!this.activeGesture) {
+@@ -87,7 +87,7 @@ export default class ViewPager extends PureComponent {
+         });
+     }
+ 
+-    UNSAFE_componentWillMount () {
++    UNSAFE_componentWillMount() {
+         this.gestureResponder = createResponder({
+             onStartShouldSetResponder: (evt, gestureState) => true,
+             onResponderGrant: this.onResponderGrant,
+@@ -97,7 +97,7 @@ export default class ViewPager extends PureComponent {
+         });
+     }
+ 
+-    componentDidMount () {
++    componentDidMount() {
+         // FlatList is set to render at initialPage.
+         // The scroller we use is not aware of this.
+         // Let it know by simulating most of what happens in scrollToPage()
+@@ -118,7 +118,7 @@ export default class ViewPager extends PureComponent {
+         });
+     }
+ 
+-    componentDidUpdate (prevProps) {
++    componentDidUpdate(prevProps) {
+         if (this.layoutChanged) {
+             this.layoutChanged = false;
+             if (typeof this.currentPage === 'number') {
+@@ -130,7 +130,7 @@ export default class ViewPager extends PureComponent {
+         }
+     }
+ 
+-    onLayout (e) {
++    onLayout(e) {
+         let { width, height } = e.nativeEvent.layout;
+         let sizeChanged = this.state.width !== width || this.state.height !== height;
+         if (width && height && sizeChanged) {
+@@ -139,36 +139,36 @@ export default class ViewPager extends PureComponent {
+         }
+     }
+ 
+-    onResponderGrant (evt, gestureState) {
++    onResponderGrant(evt, gestureState) {
+         // this.scroller.forceFinished(true);
+         this.activeGesture = true;
+         this.onPageScrollStateChanged('dragging');
+     }
+ 
+-    onResponderMove (evt, gestureState) {
++    onResponderMove(evt, gestureState) {
+         let dx = gestureState.moveX - gestureState.previousMoveX;
+         this.scrollByOffset(dx);
+     }
+ 
+-    onResponderRelease (evt, gestureState, disableSettle) {
++    onResponderRelease(evt, gestureState, disableSettle) {
+         this.activeGesture = false;
+         if (!disableSettle) {
+             this.settlePage(gestureState.vx);
+         }
+     }
+ 
+-    onPageChanged (page) {
++    onPageChanged(page) {
+         if (this.currentPage !== page) {
+             this.currentPage = page;
+             this.props.onPageSelected && this.props.onPageSelected(page);
+         }
+     }
+ 
+-    onPageScrollStateChanged (state) {
++    onPageScrollStateChanged(state) {
+         this.props.onPageScrollStateChanged && this.props.onPageScrollStateChanged(state);
+     }
+ 
+-    settlePage (vx) {
++    settlePage(vx) {
+         const { pageDataArray } = this.props;
+ 
+         if (vx < -MIN_FLING_VELOCITY) {
+@@ -197,11 +197,11 @@ export default class ViewPager extends PureComponent {
+         }
+     }
+ 
+-    getScrollOffsetOfPage (page) {
++    getScrollOffsetOfPage(page) {
+         return this.getItemLayout(this.props.pageDataArray, page).offset;
+     }
+ 
+-    flingToPage (page, velocityX) {
++    flingToPage(page, velocityX) {
+         this.onPageScrollStateChanged('settling');
+ 
+         page = this.validPage(page);
+@@ -212,7 +212,7 @@ export default class ViewPager extends PureComponent {
+         this.scroller.fling(this.scroller.getCurrX(), 0, velocityX, 0, finalX, finalX, 0, 0);
+     }
+ 
+-    scrollToPage (page, immediate) {
++    scrollToPage(page, immediate) {
+         this.onPageScrollStateChanged('settling');
+ 
+         page = this.validPage(page);
+@@ -222,7 +222,7 @@ export default class ViewPager extends PureComponent {
+         if (immediate) {
+             InteractionManager.runAfterInteractions(() => {
+                 this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 0);
+-                this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({offset: finalX, animated: false});
++                this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: finalX, animated: false });
+                 this.refs['innerFlatList'] && this.refs['innerFlatList'].recordInteraction();
+             });
+         } else {
+@@ -230,21 +230,21 @@ export default class ViewPager extends PureComponent {
+         }
+     }
+ 
+-    scrollByOffset (dx) {
++    scrollByOffset(dx) {
+         this.scroller.startScroll(this.scroller.getCurrX(), 0, -dx, 0, 0);
+     }
+ 
+-    validPage (page) {
++    validPage(page) {
+         page = Math.min(this.props.pageDataArray.length - 1, page);
+         page = Math.max(0, page);
+         return page;
+     }
+ 
+-    getScrollOffsetFromCurrentPage () {
++    getScrollOffsetFromCurrentPage() {
+         return this.scroller.getCurrX() - this.getScrollOffsetOfPage(this.currentPage);
+     }
+ 
+-    getItemLayout (data, index) {
++    getItemLayout(data, index) {
+         // this method is called 'getItemLayout', but it is not actually used
+         // as the 'getItemLayout' function for the FlatList. We use it within
+         // the code on this page though. The reason for this is that working
+@@ -259,11 +259,11 @@ export default class ViewPager extends PureComponent {
+         };
+     }
+ 
+-    keyExtractor (item, index) {
++    keyExtractor(item, index) {
+         return index.toString();
+     }
+ 
+-    renderRow ({ item, index }) {
++    renderRow({ item, index }) {
+         const { width, height } = this.state;
+         let page = this.props.renderPage(item, index);
+ 
+@@ -286,7 +286,7 @@ export default class ViewPager extends PureComponent {
+                     height: height,
+                     alignItems: 'flex-end'
+                 }}>
+-                    { element }
++                    {element}
+                 </View>
+             );
+         } else {
+@@ -294,7 +294,7 @@ export default class ViewPager extends PureComponent {
+         }
+     }
+ 
+-    render () {
++    render() {
+         const { width, height } = this.state;
+         const { pageDataArray, scrollEnabled, style, scrollViewStyle } = this.props;
+ 
+@@ -312,26 +312,26 @@ export default class ViewPager extends PureComponent {
+ 
+         return (
+             <View
+-              {...this.props}
+-              style={[style, { flex: 1 }]}
+-              {...gestureResponder}>
++                {...this.props}
++                style={[style, { flex: 1 }]}
++                {...gestureResponder}>
+                 <FlatList
+-                  style={[{ flex: 1 }, scrollViewStyle]}
+-                  ref={'innerFlatList'}
+-                  keyExtractor={this.keyExtractor}
+-                  scrollEnabled={false}
+-                  horizontal={true}
+-                  data={pageDataArray}
+-                  renderItem={this.renderRow}
+-                  onLayout={this.onLayout}
+-
+-                  // use contentOffset instead of initialScrollIndex so that we don't have
+-                  // to use the buggy 'getItemLayout' prop. See
+-                  // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
+-                  // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
+-                  contentOffset = {{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y:0}}
+-                  {...this.props.flatListProps}
+-              />
++                    style={[{ flex: 1 }, scrollViewStyle]}
++                    ref={'innerFlatList'}
++                    keyExtractor={this.keyExtractor}
++                    scrollEnabled={false}
++                    horizontal={true}
++                    data={pageDataArray}
++                    renderItem={this.renderRow}
++                    onLayout={this.onLayout}
++
++                    // use contentOffset instead of initialScrollIndex so that we don't have
++                    // to use the buggy 'getItemLayout' prop. See
++                    // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
++                    // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
++                    contentOffset={{ x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y: 0 }}
++                    {...this.props.flatListProps}
++                />
+             </View>
+         );
+     }
